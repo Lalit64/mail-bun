@@ -1,56 +1,80 @@
-/* eslint-disable @typescript-eslint/quotes */
 import nodemailer from 'nodemailer';
-import express from 'express';
-
-const router = express.Router();
-require('dotenv').config();
+import { Elysia, t } from 'elysia';
+import { log } from '../app';
 
 const transport = {
   host: 'smtp.gmail.com',
   auth: {
-    user: `${process.env.USERNAME}`,
-    pass: `${process.env.PASS}`,
+    user: `${Bun.env.USERNAME}`,
+    pass: `${Bun.env.PASS}`,
   },
 };
 
 const transporter = nodemailer.createTransport(transport);
 
-transporter.verify((error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log('Server is ready to take messages');
-  }
-});
+type Email = {
+  email: string;
+  message: string;
+};
 
-router.get('/', (req, res) => {
-  res.json({
-    message: 'This route is for sending emails 😀. Use POST.',
-  });
-});
-
-router.post('/', (req, res) => {
-  let email = req.body.email;
-  let message = req.body.message;
+const email = (body: Email) => {
+  let email = body?.email;
+  let message = body?.message;
   let content = `from: ${email} \n\n message: ${message} `;
 
   let mail = {
-    to: process.env.TO,  //Change to email address that you want to receive messages on
+    to: Bun.env.TO, //Change to email address that you want to receive messages on
     subject: 'New Message from Contact Form',
     text: content,
   };
 
   transporter.sendMail(mail, (err) => {
     if (err) {
-      res.json({
-        msg: err,
-      });
+      return {
+        msg: 'fail',
+      };
     } else {
-      res.json({
+      return {
         msg: 'success',
-      });
+      };
     }
   });
-});
+};
 
-export default router;
+const send = (app: Elysia) => {
+  transporter.verify((error) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Ready to send emails 📧.');
+    }
+  });
+
+  app.get('/api/send', (ctx) => {
+    log(ctx);
+
+    return {
+      message: 'This route is for sending emails 😀. Use POST.',
+    };
+  });
+
+  app.post(
+    '/api/send',
+    (ctx: any) => {
+      email(ctx.body);
+      log(ctx);
+
+      return {
+        msg: 'success',
+      };
+    },
+    {
+      body: t.Object({
+        email: t.String(),
+        message: t.String(),
+      }),
+    },
+  );
+};
+
+export default send;

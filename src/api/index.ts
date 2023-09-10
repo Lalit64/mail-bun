@@ -1,16 +1,17 @@
-import express from 'express';
-
-import MessageResponse from '../interfaces/MessageResponse';
+import { log } from '../app';
 import send from './send';
+import Elysia from 'elysia';
 
-const router = express.Router();
+const api = (app: Elysia) => {
+  app.get('/api/', (ctx) => {
+    log(ctx);
 
-router.get<{}, MessageResponse>('/', (req, res) => {
-  res.json({
-    message: 'API - 👋🌎🌍🌏',
+    return {
+      message: 'API - 👋🌎🌍🌏',
+    };
   });
-});
 
-router.use('/send', send);
+  send(app);
+};
 
-export default router;
+export default api;
