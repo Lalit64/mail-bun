@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { Elysia, t } from 'elysia';
 import { log } from '../app';
+import { Email } from '../types';
 
 const transport = {
   host: 'smtp.gmail.com',
@@ -11,11 +12,6 @@ const transport = {
 };
 
 const transporter = nodemailer.createTransport(transport);
-
-type Email = {
-  email: string;
-  message: string;
-};
 
 const email = (body: Email) => {
   let email = body?.email;
