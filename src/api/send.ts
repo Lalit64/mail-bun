@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import { Elysia, t } from "elysia";
 import { Email } from "../types";
 import { log } from "../log";
+import Bun from "bun";
 
 const transport = {
   host: "smtp.gmail.com",
