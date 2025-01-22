@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "description": "Mail server written in bun",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "bun src/index.ts",
     "dev": "bun run --hot ./src/index.ts",
     "build": "tsc",
     "lint": "eslint --fix src test",
