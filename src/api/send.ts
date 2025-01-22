@@ -1,10 +1,10 @@
-import nodemailer from 'nodemailer';
-import { Elysia, t } from 'elysia';
-import { log } from '../app';
-import { Email } from '../types';
+import nodemailer from "nodemailer";
+import { Elysia, t } from "elysia";
+import { Email } from "../types";
+import { log } from "../log";
 
 const transport = {
-  host: 'smtp.gmail.com',
+  host: "smtp.gmail.com",
   auth: {
     user: `${Bun.env.USERNAME}`,
     pass: `${Bun.env.PASS}`,
@@ -20,18 +20,18 @@ const email = (body: Email) => {
 
   let mail = {
     to: Bun.env.TO, //Change to email address that you want to receive messages on
-    subject: 'New Message from Contact Form',
+    subject: "New Message from Contact Form",
     text: content,
   };
 
   transporter.sendMail(mail, (err) => {
     if (err) {
       return {
-        msg: 'fail',
+        msg: "fail",
       };
     } else {
       return {
-        msg: 'success',
+        msg: "success",
       };
     }
   });
@@ -42,26 +42,26 @@ const send = (app: Elysia) => {
     if (error) {
       console.log(error);
     } else {
-      console.log('Ready to send emails 📧.');
+      console.log("Ready to send emails 📧.");
     }
   });
 
-  app.get('/api/send', (ctx) => {
+  app.get("/api/send", (ctx) => {
     log(ctx);
 
     return {
-      message: 'This route is for sending emails 😀. Use POST.',
+      message: "This route is for sending emails 😀. Use POST.",
     };
   });
 
   app.post(
-    '/api/send',
+    "/api/send",
     (ctx: any) => {
       email(ctx.body);
       log(ctx);
 
       return {
-        msg: 'success',
+        msg: "success",
       };
     },
     {
@@ -69,7 +69,7 @@ const send = (app: Elysia) => {
         email: t.String(),
         message: t.String(),
       }),
-    },
+    }
   );
 };
 

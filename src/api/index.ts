@@ -1,13 +1,13 @@
-import { log } from '../app';
-import send from './send';
-import Elysia from 'elysia';
+import send from "./send";
+import Elysia from "elysia";
+import { log } from "../log";
 
 const api = (app: Elysia) => {
-  app.get('/api/', (ctx) => {
+  app.get("/api/", (ctx) => {
     log(ctx);
 
     return {
-      message: 'API - 👋🌎🌍🌏',
+      message: "API - 👋🌎🌍🌏",
     };
   });
 
