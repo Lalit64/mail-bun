@@ -1,4 +1,5 @@
 import app from "./app";
+import Bun from "bun";
 
 const port = Bun.env.PORT || 8080;
 app.listen(port, () => {
